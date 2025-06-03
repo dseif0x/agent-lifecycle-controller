@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-lifecycle-controller
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent-lifecycle-controller
+  template:
+    metadata:
+      labels:
+        app: agent-lifecycle-controller
+    spec:
+      hostNetwork: true
+      containers:
+      - image: ghcr.io/dseif0x/agent-lifecycle-controller:latest
+        imagePullPolicy: Always
+        name: agent-lifecycle-controller
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+          name: http
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "100m"
+          limits:
+            memory: "200Mi"
+            cpu: "200m"
+        volumeMounts:
+        - name: ssh-key-volume
+          mountPath: /root/.ssh
+          readOnly: true
+        env:
+        - name: NODE_MAC
+          value: "{{ .Values.gpuNode.mac }}"
+        - name: NODE_HOST
+          value: "{{ .Values.gpuNode.host }}"
+        - name: NODE_USER
+          value: "{{ .Values.gpuNode.uname }}"
+        - name: SSH_KEY_PATH
+          value: "/root/.ssh/id_rsa"
+      volumes:
+      - name: ssh-key-volume
+        secret:
+          secretName: visus-ssh-key
+          defaultMode: 0400
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: agent-lifecycle-controller-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: agent-lifecycle-controller
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
