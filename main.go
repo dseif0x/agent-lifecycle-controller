@@ -93,21 +93,24 @@ func handleShutdown(w http.ResponseWriter, r *http.Request) {
 
 	client, err := ssh.Dial("tcp", host+":22", config)
 	if err != nil {
-		http.Error(w, "Failed to SSH to host", http.StatusInternalServerError)
+		fmt.Println("Failed to SSH to host", http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"status": "shutdown command NOT sent"})
 		return
 	}
 	defer client.Close()
 
 	sess, err := client.NewSession()
 	if err != nil {
-		http.Error(w, "Failed to create SSH session", http.StatusInternalServerError)
+		fmt.Println("Failed to create SSH session", http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"status": "shutdown command NOT sent"})
 		return
 	}
 	defer sess.Close()
 
 	err = sess.Run("sudo shutdown now")
 	if err != nil {
-		http.Error(w, "Shutdown command failed", http.StatusInternalServerError)
+		fmt.Println("Shutdown command failed", http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"status": "shutdown command NOT sent"})
 		return
 	}
 
