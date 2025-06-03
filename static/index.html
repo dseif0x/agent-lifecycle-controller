@@ -6,22 +6,22 @@
     <title>K8s Node Controller</title>
 </head>
 <body>
-<h1>Node Control Panel</h1>
-<button onclick="wake()">Wake Node</button>
-<button onclick="shutdown()">Shutdown Node</button>
+<h1>Visus Control Panel</h1>
+<button onclick="wake()">Wake Visus</button>
+<button onclick="shutdown()">Shutdown Visus</button>
 <script>
     async function wake() {
         await fetch('/wake', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-        }).then(r => r.json()).then(alert);
+        }).then(r => r.json());
     }
 
     async function shutdown() {
         await fetch('/shutdown', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-        }).then(r => r.json()).then(alert);
+        }).then(r => r.json());
     }
 </script>
 </body>
