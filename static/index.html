@@ -1,0 +1,28 @@
+<!-- static/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>K8s Node Controller</title>
+</head>
+<body>
+<h1>Node Control Panel</h1>
+<button onclick="wake()">Wake Node</button>
+<button onclick="shutdown()">Shutdown Node</button>
+<script>
+    async function wake() {
+        await fetch('/wake', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        }).then(r => r.json()).then(alert);
+    }
+
+    async function shutdown() {
+        await fetch('/shutdown', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        }).then(r => r.json()).then(alert);
+    }
+</script>
+</body>
+</html>
