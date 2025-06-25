@@ -4,14 +4,14 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
+	"github.com/joho/godotenv"
+	"golang.org/x/crypto/ssh"
 	"io/fs"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
-
-	"github.com/joho/godotenv"
-	"golang.org/x/crypto/ssh"
+	"time"
 )
 
 //go:embed static/*
@@ -104,6 +104,7 @@ func handleShutdown(w http.ResponseWriter, r *http.Request) {
 			ssh.PublicKeys(signer),
 		},
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+		Timeout:         time.Second, // 1 second
 	}
 
 	client, err := ssh.Dial("tcp", host+":22", config)
