@@ -37,24 +37,28 @@ func main() {
 
 func handleWake(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
+		log.Println("Invalid method for /wake endpoint")
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
 	}
 
 	mac := os.Getenv("NODE_MAC")
 	if mac == "" {
+		log.Println("NODE_MAC not set")
 		http.Error(w, "NODE_MAC not set", http.StatusInternalServerError)
 		return
 	}
 
 	host := os.Getenv("NODE_HOST")
 	if host == "" {
+		log.Println("NODE_HOST not set")
 		http.Error(w, "NODE_HOST not set", http.StatusInternalServerError)
 		return
 	}
 
 	err := exec.Command("wakeonlan", "-i "+host, mac).Run()
 	if err != nil {
+		log.Println("Failed to send WOL packet:", err)
 		http.Error(w, "Failed to send WOL packet", http.StatusInternalServerError)
 		return
 	}
@@ -73,18 +77,21 @@ func handleShutdown(w http.ResponseWriter, r *http.Request) {
 	keyPath := os.Getenv("SSH_KEY_PATH")
 
 	if host == "" || user == "" || keyPath == "" {
+		log.Println("NODE_HOST, NODE_USER, or SSH_KEY_PATH not set")
 		http.Error(w, "NODE_HOST, NODE_USER, or SSH_KEY_PATH not set", http.StatusInternalServerError)
 		return
 	}
 
 	key, err := os.ReadFile(keyPath)
 	if err != nil {
+		log.Println("Failed to read SSH key:", err)
 		http.Error(w, "Failed to read SSH key", http.StatusInternalServerError)
 		return
 	}
 
 	signer, err := ssh.ParsePrivateKey(key)
 	if err != nil {
+		log.Println("Invalid private key:", err)
 		http.Error(w, "Invalid private key", http.StatusInternalServerError)
 		return
 	}
