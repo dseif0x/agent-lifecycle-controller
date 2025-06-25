@@ -37,8 +37,6 @@ spec:
         env:
         - name: NODE_MAC
           value: "{{ .Values.gpuNode.mac }}"
-        - name: NODE_BROADCAST
-          value: "{{ .Values.gpuNode.broadcast }}"
         - name: NODE_HOST
           value: "{{ .Values.gpuNode.host }}"
         - name: NODE_USER
