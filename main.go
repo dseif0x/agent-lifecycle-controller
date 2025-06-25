@@ -47,7 +47,13 @@ func handleWake(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := exec.Command("wakeonlan", mac).Run()
+	broadcast := os.Getenv("NODE_BROADCAST")
+	if broadcast == "" {
+		http.Error(w, "NODE_BROADCAST not set", http.StatusInternalServerError)
+		return
+	}
+
+	err := exec.Command("wakeonlan", "-i"+broadcast, mac).Run()
 	if err != nil {
 		http.Error(w, "Failed to send WOL packet", http.StatusInternalServerError)
 		return

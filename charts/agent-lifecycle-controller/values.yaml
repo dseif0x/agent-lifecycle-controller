@@ -1,4 +1,5 @@
 gpuNode:
   mac: ff:ff:ff:ff:ff:ff
   host: 10.10.10.10
+  broadcast: 10.10.255.255
   uname: dan1
