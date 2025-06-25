@@ -56,7 +56,9 @@ func handleWake(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := exec.Command("wakeonlan", "-i "+host, mac).Run()
+	log.Println("Sending WOL packet to MAC:", mac, "on host:", host)
+
+	err := exec.Command("wakeonlan", "-i", host, mac).Run()
 	if err != nil {
 		log.Println("Failed to send WOL packet:", err)
 		http.Error(w, "Failed to send WOL packet", http.StatusInternalServerError)
