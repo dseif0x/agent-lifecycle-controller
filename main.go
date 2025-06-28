@@ -49,10 +49,10 @@ func handleWake(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	host := os.Getenv("NODE_HOST")
+	host := os.Getenv("WAKE_HOST")
 	if host == "" {
-		log.Println("NODE_HOST not set")
-		http.Error(w, "NODE_HOST not set", http.StatusInternalServerError)
+		log.Println("WAKE_HOST not set")
+		http.Error(w, "WAKE_HOST not set", http.StatusInternalServerError)
 		return
 	}
 
