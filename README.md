@@ -88,3 +88,7 @@ docker build -t agent-lifecycle-controller .
 - Uses SSH key-based authentication
 - Requires proper network access to target nodes
 - SSH host key verification is disabled (insecure for production)
+
+## License
+
+MIT License - see the source code for full license text.
