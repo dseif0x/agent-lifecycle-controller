@@ -3,3 +3,5 @@ gpuNode:
   host: 10.10.10.10
   wake_host: 10.10.255.255
   uname: dan1
+
+extraResources:
