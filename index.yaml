@@ -3,6 +3,16 @@ entries:
   agent-lifecycle-controller:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2026-10-07T12:06:45.408496576Z"
+    description: A Helm chart for Kubernetes
+    digest: de56a2e7f1788e6c89f7a53eb2128f34a4853acddf6d5cb41df51b1d0281f19f
+    name: agent-lifecycle-controller
+    type: application
+    urls:
+    - https://github.com/dseif0x/agent-lifecycle-controller/releases/download/agent-lifecycle-controller-0.1.6/agent-lifecycle-controller-0.1.6.tgz
+    version: 0.1.6
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-07-31T18:56:13.266796694Z"
     description: A Helm chart for Kubernetes
     digest: 6d1444f2411235ca8cf45ee8dee05346a84386a31191910b3820ed6c5430319a
@@ -61,4 +71,4 @@ entries:
     urls:
     - https://github.com/dseif0x/agent-lifecycle-controller/releases/download/agent-lifecycle-controller-0.1.0/agent-lifecycle-controller-0.1.0.tgz
     version: 0.1.0
-generated: "2025-07-31T18:56:13.267572792Z"
+generated: "2026-10-07T12:06:45.408511027Z"
