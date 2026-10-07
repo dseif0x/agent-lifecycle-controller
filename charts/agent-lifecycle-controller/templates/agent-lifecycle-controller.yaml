@@ -16,8 +16,8 @@ spec:
     spec:
       hostNetwork: true
       containers:
-      - image: ghcr.io/dseif0x/agent-lifecycle-controller:latest
-        imagePullPolicy: Always
+      - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: agent-lifecycle-controller
         ports:
         - containerPort: 8080

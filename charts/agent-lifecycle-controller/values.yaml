@@ -1,3 +1,10 @@
+image:
+  repository: ghcr.io/dseif0x/agent-lifecycle-controller
+  # Pin a build for reproducible deploys, e.g. "sha-1234567" or
+  # "latest@sha256:<digest>".
+  tag: latest
+  pullPolicy: IfNotPresent
+
 gpuNode:
   mac: ff:ff:ff:ff:ff:ff
   host: 10.10.10.10
