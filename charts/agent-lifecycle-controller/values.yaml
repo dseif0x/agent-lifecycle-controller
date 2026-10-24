@@ -10,5 +10,8 @@ gpuNode:
   host: 10.10.10.10
   wake_host: 10.10.255.255
   uname: dan1
+  # Run over SSH by /shutdown. "sudo systemctl suspend" suspends to RAM
+  # instead (needs WoL from S3 and a sudo rule for it on the node).
+  shutdownCommand: "sudo shutdown now"
 
 extraResources:
