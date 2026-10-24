@@ -43,6 +43,8 @@ spec:
           value: "{{ .Values.gpuNode.host }}"
         - name: NODE_USER
           value: "{{ .Values.gpuNode.uname }}"
+        - name: SHUTDOWN_COMMAND
+          value: {{ .Values.gpuNode.shutdownCommand | quote }}
         - name: SSH_KEY_PATH
           value: "/root/.ssh/id_rsa"
       volumes:

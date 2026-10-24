@@ -123,7 +123,14 @@ func handleShutdown(w http.ResponseWriter, r *http.Request) {
 	}
 	defer sess.Close()
 
-	err = sess.Run("sudo shutdown now")
+	// SHUTDOWN_COMMAND lets the node be suspended instead of powered off
+	// (e.g. "sudo systemctl suspend"), which wakes much faster via WoL.
+	cmd := os.Getenv("SHUTDOWN_COMMAND")
+	if cmd == "" {
+		cmd = "sudo shutdown now"
+	}
+	log.Println("Running on", host+":", cmd)
+	err = sess.Run(cmd)
 	if err != nil {
 		fmt.Println("Shutdown command failed", http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(map[string]string{"status": "shutdown command NOT sent"})
