@@ -14,4 +14,10 @@ gpuNode:
   # instead (needs WoL from S3 and a sudo rule for it on the node).
   shutdownCommand: "sudo shutdown now"
 
+# Comma-separated IPs/CIDRs allowed to call /wake and /shutdown (the pod
+# uses hostNetwork, so port 8080 is reachable on the node's LAN IP). Empty
+# allows everyone. Include the pod network and the node IPs: in-cluster
+# callers arrive from either, depending on flannel's masquerading.
+allowedSources: ""
+
 extraResources:

@@ -45,6 +45,8 @@ spec:
           value: "{{ .Values.gpuNode.uname }}"
         - name: SHUTDOWN_COMMAND
           value: {{ .Values.gpuNode.shutdownCommand | quote }}
+        - name: ALLOWED_SOURCES
+          value: {{ .Values.allowedSources | quote }}
         - name: SSH_KEY_PATH
           value: "/root/.ssh/id_rsa"
       volumes:

@@ -8,9 +8,11 @@ import (
 	"golang.org/x/crypto/ssh"
 	"io/fs"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 )
 
@@ -31,8 +33,56 @@ func main() {
 	}
 	http.Handle("/", http.FileServer(http.FS(staticFs)))
 
+	handler, err := allowSources(http.DefaultServeMux, os.Getenv("ALLOWED_SOURCES"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	fmt.Println("Server running at http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", handler))
+}
+
+// allowSources only lets requests from the given comma-separated IPs/CIDRs
+// through. The pod runs with hostNetwork, so without it anyone on the LAN can
+// wake or shut down the node. An empty list allows everyone.
+func allowSources(next http.Handler, list string) (http.Handler, error) {
+	var nets []*net.IPNet
+	for _, item := range strings.Split(list, ",") {
+		item = strings.TrimSpace(item)
+		if item == "" {
+			continue
+		}
+		if !strings.Contains(item, "/") {
+			if strings.Contains(item, ":") {
+				item += "/128"
+			} else {
+				item += "/32"
+			}
+		}
+		_, n, err := net.ParseCIDR(item)
+		if err != nil {
+			return nil, fmt.Errorf("invalid ALLOWED_SOURCES entry %q: %w", item, err)
+		}
+		nets = append(nets, n)
+	}
+	if len(nets) == 0 {
+		return next, nil
+	}
+	log.Printf("Only accepting requests from %s", list)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		host, _, err := net.SplitHostPort(r.RemoteAddr)
+		ip := net.ParseIP(host)
+		if err == nil && ip != nil {
+			for _, n := range nets {
+				if n.Contains(ip) {
+					next.ServeHTTP(w, r)
+					return
+				}
+			}
+		}
+		log.Println("Rejected request from", r.RemoteAddr, r.Method, r.URL.Path)
+		http.Error(w, "Forbidden", http.StatusForbidden)
+	}), nil
 }
 
 func handleWake(w http.ResponseWriter, r *http.Request) {
